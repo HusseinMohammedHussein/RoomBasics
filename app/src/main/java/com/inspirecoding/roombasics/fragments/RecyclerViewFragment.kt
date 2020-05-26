@@ -7,21 +7,25 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navGraphViewModels
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.inspirecoding.roombasics.R
 import com.inspirecoding.roombasics.adapter.ToDoAdapter
 import com.inspirecoding.roombasics.databinding.FragmentRecyclerViewBinding
+import com.inspirecoding.roombasics.viewmodel.ToDoViewModel
 
 class RecyclerViewFragment : Fragment()
 {
     private lateinit var binding: FragmentRecyclerViewBinding
 
     private lateinit var toDoAdapter: ToDoAdapter
+    private val toDoViewModel by navGraphViewModels<ToDoViewModel>(R.id.navigation_graph)
 
-    private val itemTouchHelper_reOrder by lazy {
+    private val itemTouchHelper by lazy {
 
         val simpleItemTouchCallback = object : ItemTouchHelper.SimpleCallback(ItemTouchHelper.START or ItemTouchHelper.END, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
         {
@@ -32,6 +36,8 @@ class RecyclerViewFragment : Fragment()
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int)
             {
+                val from = viewHolder.adapterPosition
+                toDoViewModel.deleteToDo(toDoAdapter.getItemFromPosition(position = from))
             }
 
             override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int)
@@ -70,7 +76,12 @@ class RecyclerViewFragment : Fragment()
             }
         }
 
-        itemTouchHelper_reOrder.attachToRecyclerView(binding.recyclerView)
+        toDoViewModel.listOfToDosLiveData.observe(viewLifecycleOwner) { _list ->
+            toDoAdapter.addToDos(_list)
+            toDoAdapter.notifyDataSetChanged()
+        }
+
+        itemTouchHelper.attachToRecyclerView(binding.recyclerView)
 
         return binding.root
     }

@@ -8,15 +8,19 @@ import android.widget.ArrayAdapter
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.navGraphViewModels
 import com.inspirecoding.roombasics.R
 import com.inspirecoding.roombasics.databinding.FragmentAddToDoDialogBinding
 import com.inspirecoding.roombasics.enums.Prioirities
 import com.inspirecoding.roombasics.model.ToDo
+import com.inspirecoding.roombasics.viewmodel.ToDoViewModel
 import kotlinx.android.synthetic.main.fragment_add_to_do_dialog.*
 
 class AddToDoDialog : DialogFragment()
 {
     private lateinit var binding: FragmentAddToDoDialogBinding
+    private val toDoViewModel by
+        navGraphViewModels<ToDoViewModel>(R.id.navigation_graph)
 
     override fun onCreateView(layoutInflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
     {
@@ -48,10 +52,11 @@ class AddToDoDialog : DialogFragment()
             {
                 val updatedToDo = createToDo()
                 updatedToDo.toDoId = toDo.toDoId
+                toDoViewModel.updateToDo(updatedToDo)
             }
             else
             {
-
+                toDoViewModel.addToDo(createToDo())
             }
             dismiss()
         }
