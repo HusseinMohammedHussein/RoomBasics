@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.inspirecoding.roombasics.R
 import com.inspirecoding.roombasics.databinding.ItemTodoRecyclerviewBinding
 import com.inspirecoding.roombasics.enums.Prioirities
+import com.inspirecoding.roombasics.fragments.RecyclerViewFragmentDirections
 import com.inspirecoding.roombasics.model.ToDo
 
 class ToDoAdapter(val context: Context): RecyclerView.Adapter<ToDoAdapter.ToDoHolder>()
@@ -66,9 +67,9 @@ class ToDoAdapter(val context: Context): RecyclerView.Adapter<ToDoAdapter.ToDoHo
 
         override fun onClick(view: View)
         {
-//            val navController: NavController = Navigation.findNavController(view)
-//            val action = RecyclerViewFragmentDirections.actionRecyclerFragmentToAddToDoDialog(listOfToDos[adapterPosition], adapterPosition)
-//            navController.navigate(action)
+            val navController: NavController = Navigation.findNavController(view)
+            val action = RecyclerViewFragmentDirections.actionRecyclerFragmentToAddToDoDialog(listOfToDos[adapterPosition], adapterPosition)
+            navController.navigate(action)
         }
     }
 }
